@@ -10,11 +10,14 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         # опред�
 
 client.connect(("127.0.0.1", 2500))        # подключаем клиента к серверу
 
+client.send(f'ропропрвопв'.encode('utf-8'))
+
 
 car = list()
 cars = [[0,0], [0,0], [0,0]]
 color_size = 5
 color_line = 150
+color_diff = 0
 area_min = 100
 area_max = 1000000
 ph_path = 'test1.png'
@@ -41,11 +44,11 @@ def color(ch, ch1):
     green = gg//cnt
     blue = bb//cnt
     #return red, green, blue
-    if max(red, green, blue) == red and max(red, green, blue) > color_line:
+    if red > (green + color_diff) and red > (blue + color_diff) and red > color_line:
         return 'red'
-    elif max(red, green, blue) == green and max(red, green, blue) > color_line:
+    elif green > (red + color_diff) and green > (blue + color_diff) and green > color_line:
         return 'green'
-    elif max(red, green, blue) == blue and max(red, green, blue) > color_line:
+    elif blue > (green + color_diff) and blue > (red + color_diff) and blue > color_line:
         return 'blue'
     else:
         return 0
@@ -289,7 +292,7 @@ while True:
 
 					print(color(ch, ch1), 'цвет')
 
-					client.send(f'{dr(cars)}/{x10}/{y10}/{color(ch, ch1)}'.encode('utf-8'))
+					client.send(f'{dr(cars)}/{x10}/{y10}/{color(ch, ch1)}\n'.encode('utf-8'))
 
 					data = client.recv(1024)
 					print(data.decode('utf-8'))
